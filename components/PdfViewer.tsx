@@ -52,30 +52,30 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ pdfDoc, currentPage, setCu
     };
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between mb-4 px-2">
+        <div className="flex flex-col h-full animate-fade-in-up">
+            <div className="flex items-center justify-between mb-6 px-4 bg-white/40 backdrop-blur-sm p-3 rounded-2xl border border-white/50 shadow-sm">
                 <button
                     onClick={goToPreviousPage}
                     disabled={currentPage <= 1}
-                    className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="p-2.5 rounded-xl bg-white shadow-sm hover:shadow-md hover:bg-gray-50 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed transition-all text-gray-700 hover:-translate-x-0.5"
                     aria-label="Previous Page"
                 >
-                    <ChevronLeftIcon className="h-6 w-6 text-gray-600" />
+                    <ChevronLeftIcon className="h-6 w-6" />
                 </button>
-                <span className="text-gray-700 font-medium">
-                    Page {currentPage} of {pdfDoc?.numPages || '...'}
+                <span className="text-gray-800 font-bold tracking-wide">
+                    Page <span className="text-brand-primary">{currentPage}</span> of {pdfDoc?.numPages || '...'}
                 </span>
                 <button
                     onClick={goToNextPage}
                     disabled={!pdfDoc || currentPage >= pdfDoc.numPages}
-                    className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="p-2.5 rounded-xl bg-white shadow-sm hover:shadow-md hover:bg-gray-50 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed transition-all text-gray-700 hover:translate-x-0.5"
                     aria-label="Next Page"
                 >
-                    <ChevronRightIcon className="h-6 w-6 text-gray-600" />
+                    <ChevronRightIcon className="h-6 w-6" />
                 </button>
             </div>
-            <div className="flex-grow overflow-auto bg-gray-100 rounded-lg flex justify-center items-start p-2">
-                <canvas ref={canvasRef} className="max-w-full h-auto shadow-md"></canvas>
+            <div className="flex-grow overflow-auto bg-gray-50/50 backdrop-blur-md rounded-2xl shadow-inner border border-gray-100 flex justify-center items-start p-6">
+                <canvas ref={canvasRef} className="max-w-full h-auto shadow-[0_20px_50px_rgba(0,_0,_0,_0.1)] rounded-xl border border-gray-200"></canvas>
             </div>
         </div>
     );

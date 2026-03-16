@@ -57,7 +57,7 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({
                 <button
                     onClick={onSummarize}
                     disabled={isSummarizing || isPreparing || !hasDocument}
-                    className="flex-1 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 disabled:bg-gray-300 disabled:text-gray-100 disabled:cursor-not-allowed transition-colors shadow"
+                    className="flex-1 inline-flex items-center justify-center px-6 py-3.5 border border-transparent text-base font-bold rounded-xl text-white bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-indigo-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:from-gray-300 disabled:to-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
                 >
                     {isPreparing ? <><Spinner /><span className="ml-2">Preparing...</span></> : 
                      isSummarizing ? <><Spinner /><span className="ml-2">Summarizing...</span></> : 
@@ -67,42 +67,46 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({
                 <button
                     onClick={onListen}
                     disabled={!summary || isLoadingAudio}
-                    className="flex-1 inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-semibold rounded-lg text-gray-800 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors shadow"
+                    className="flex-1 inline-flex items-center justify-center px-6 py-3.5 border border-gray-200 text-base font-bold rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed shadow hover:shadow-md transition-all duration-300"
                 >
-                    {isLoadingAudio ? <Spinner /> : isPlaying ? <StopIcon className="h-5 w-5 mr-2" /> : <PlayIcon className="h-5 w-5 mr-2" />}
+                    {isLoadingAudio ? <Spinner /> : isPlaying ? <StopIcon className="h-5 w-5 mr-2 text-rose-500" /> : <PlayIcon className="h-5 w-5 mr-2 text-emerald-500" />}
                     {isPlaying ? 'Stop' : 'Listen'}
                 </button>
             </div>
 
             {isSummarizing && (
-                <div className="mt-4">
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                        <div className="bg-brand-primary h-2.5 rounded-full" style={{ width: `${summarizationProgress}%`, transition: 'width 0.3s ease-in-out' }}></div>
+                <div className="mt-6">
+                    <div className="w-full bg-indigo-100/50 rounded-full h-3 overflow-hidden">
+                        <div className="bg-gradient-to-r from-brand-primary to-accent h-3 rounded-full relative" style={{ width: `${summarizationProgress}%`, transition: 'width 0.4s ease-out' }}>
+                            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                        </div>
                     </div>
-                    <p className="text-center text-sm text-gray-600 mt-1">{Math.round(summarizationProgress)}% Complete</p>
+                    <p className="text-center text-sm font-medium text-gray-500 mt-2">{Math.round(summarizationProgress)}% Complete</p>
                 </div>
             )}
 
-            <div className="flex justify-between items-center mt-6 mb-4 border-b pb-2">
-                 <h3 className="text-lg font-semibold text-gray-800">AI Summary</h3>
-                 <div className="flex items-center space-x-4">
+            <div className="flex justify-between items-center mt-8 mb-4 border-b border-gray-100 pb-4">
+                 <h3 className="text-xl font-bold text-gray-800 tracking-tight">AI Summary</h3>
+                 <div className="flex items-center space-x-4 bg-gray-50/80 p-1.5 rounded-xl border border-gray-100 shadow-sm">
                      <select
                          value={summaryFormat}
                          onChange={(e) => setSummaryFormat(e.target.value as any)}
                          disabled={isSummarizing}
-                         className="border-gray-300 rounded-md text-sm focus:ring-emerald-500 focus:border-emerald-500 p-1"
+                         className="bg-white border-gray-200 rounded-lg text-sm font-medium focus:ring-brand-primary focus:border-brand-primary py-2 px-3 shadow-sm outline-none transition-colors"
                      >
                          <option value="paragraph">Paragraph</option>
                          <option value="bullets">Bullet Points</option>
                          <option value="mindmap">Mind Map</option>
                          <option value="flashcards">Flashcards</option>
                      </select>
-                     <ToggleSwitch label="Explain Like I'm 5" checked={isEli5} onChange={setIsEli5} disabled={isSummarizing}/>
+                     <div className="px-2">
+                        <ToggleSwitch label="Explain Like I'm 5" checked={isEli5} onChange={setIsEli5} disabled={isSummarizing}/>
+                     </div>
                  </div>
             </div>
             
-            <div className="flex-grow bg-brand-light/40 p-4 rounded-lg overflow-y-auto min-h-[150px]">
-                {error && <div className="text-red-600 bg-red-100 p-3 rounded-md">{error}</div>}
+            <div className="flex-grow bg-white/60 backdrop-blur-xl p-6 rounded-2xl shadow-inner border border-white/50 overflow-y-auto min-h-[250px] transition-all duration-300">
+                {error && <div className="text-red-700 bg-red-50/80 border border-red-200 p-4 rounded-xl mb-4 font-medium">{error}</div>}
                 
                 {isPreparing ? (
                      <div className="text-center text-gray-500 pt-8">

@@ -73,19 +73,19 @@ const Quiz: React.FC<QuizProps> = ({ questions }) => {
   const hasAnsweredCurrent = selectedAnswers[currentIndex] !== '';
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-4 flex flex-col items-center">
-      <div className="flex justify-between items-center w-full mb-6">
-        <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-          Question {currentIndex + 1} of {questions.length}
-        </span>
+    <div className="w-full mx-auto pb-8 flex flex-col items-center animate-fade-in-up">
+      <div className="flex justify-between items-center w-full mb-6 px-2">
+        <div className="bg-indigo-50 text-brand-primary px-4 py-1.5 rounded-full text-sm font-bold tracking-wide shadow-sm">
+          QUESTION {currentIndex + 1} OF {questions.length}
+        </div>
       </div>
 
-      <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-6">
-        <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-8 leading-relaxed">
+      <div className="w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-8 sm:p-10 mb-8 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-indigo-100">
+        <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-10 leading-relaxed tracking-tight">
           {currentQ.question}
         </h3>
         
-        <div className="space-y-3">
+        <div className="space-y-4">
           {currentQ.options.map((option, idx) => {
             const isSelected = selectedAnswers[currentIndex] === option;
             const optionLetter = String.fromCharCode(65 + idx); // A, B, C, D
@@ -93,19 +93,19 @@ const Quiz: React.FC<QuizProps> = ({ questions }) => {
               <button
                 key={idx}
                 onClick={() => handleSelectOption(option)}
-                className={`w-full text-left px-5 py-4 border-2 rounded-xl transition-all flex items-center gap-4
-                  ${isSelected ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200' : 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'}
+                className={`w-full text-left px-6 py-5 border-2 rounded-2xl transition-all duration-300 flex items-center gap-5
+                  ${isSelected ? 'border-brand-primary bg-indigo-50/80 ring-4 ring-brand-primary/20 shadow-md transform scale-[1.01]' : 'border-gray-200 hover:border-indigo-300 hover:bg-white hover:shadow-sm'}
                 `}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
-                  ${isSelected ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-600'}
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-base shadow-sm transition-colors duration-300
+                  ${isSelected ? 'bg-gradient-to-br from-brand-primary to-brand-secondary text-white' : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'}
                 `}>
                   {optionLetter}
                 </div>
-                <span className={`flex-1 text-lg ${isSelected ? 'text-indigo-900 font-semibold' : 'text-gray-700'}`}>
+                <span className={`flex-1 text-lg leading-snug transition-colors duration-300 ${isSelected ? 'text-indigo-900 font-bold' : 'text-gray-700 font-medium'}`}>
                   {option}
                 </span>
-                {isSelected && <CheckCircle2 className="w-5 h-5 text-indigo-500" />}
+                {isSelected && <CheckCircle2 className="w-6 h-6 text-brand-primary shrink-0 animate-blob" />}
               </button>
             );
           })}
@@ -115,13 +115,13 @@ const Quiz: React.FC<QuizProps> = ({ questions }) => {
       <button
         onClick={handleNext}
         disabled={!hasAnsweredCurrent}
-        className={`w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-xl font-bold text-lg shadow-md transition-all
+        className={`w-full sm:w-auto min-w-[240px] px-8 py-4.5 rounded-2xl font-bold text-lg transition-all duration-300 transform
           ${hasAnsweredCurrent 
-            ? 'bg-indigo-600 hover:bg-indigo-700 text-white hover:shadow-lg hover:-translate-y-0.5' 
+            ? 'bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-indigo-600 hover:to-indigo-700 text-white shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-1' 
             : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
         `}
       >
-        {currentIndex === questions.length - 1 ? 'Finish & Check Score' : 'Next Question'}
+        {currentIndex === questions.length - 1 ? 'Finish & View Score' : 'Next Question'}
       </button>
 
     </div>

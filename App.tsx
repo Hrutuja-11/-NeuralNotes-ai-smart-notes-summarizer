@@ -495,71 +495,126 @@ const App: React.FC = () => {
             </header>
             <main className="flex-grow flex flex-col p-4 lg:p-6 gap-6">
                 {!file && !processedYoutubeUrl && !processedVideoFile ? (
-                    <div className="w-full flex-grow flex flex-col items-center pt-10 space-y-8">
-                        {/* Tab Switcher */}
-                        <div className="flex space-x-2 p-1 bg-gray-100 rounded-lg">
-                            <button
-                                onClick={() => setInputType('pdf')}
-                                className={`px-6 py-2 rounded-md font-medium transition-colors ${inputType === 'pdf' ? 'bg-white shadow text-accent' : 'text-gray-600 hover:text-gray-900'}`}
-                            >
-                                PDF
-                            </button>
-                            <button
-                                onClick={() => setInputType('youtube')}
-                                className={`px-6 py-2 rounded-md font-medium transition-colors ${inputType === 'youtube' ? 'bg-white shadow text-red-500' : 'text-gray-600 hover:text-gray-900'}`}
-                            >
-                                YouTube
-                            </button>
-                            <button
-                                onClick={() => setInputType('video')}
-                                className={`px-6 py-2 rounded-md font-medium transition-colors ${inputType === 'video' ? 'bg-white shadow text-blue-500' : 'text-gray-600 hover:text-gray-900'}`}
-                            >
-                                Media File
-                            </button>
+                    <div className="w-full flex-grow flex flex-col items-center justify-start relative overflow-hidden -mx-4 -my-4 lg:-mx-6 lg:-my-6 pt-20 pb-16 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+                        {/* Animated Background */}
+                        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                            <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-brand-primary/10 blur-3xl mix-blend-multiply animate-blob"></div>
+                            <div className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-accent/10 blur-3xl mix-blend-multiply animate-blob" style={{ animationDelay: '2s' }}></div>
+                            <div className="absolute -bottom-[20%] left-[20%] w-[60%] h-[60%] rounded-full bg-brand-secondary/10 blur-3xl mix-blend-multiply animate-blob" style={{ animationDelay: '4s' }}></div>
                         </div>
 
-                        {/* Input Areas */}
-                        <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8">
-                            {inputType === 'pdf' && (
-                                <PdfUploader onFileChange={handleFileChange} />
-                            )}
-                            {inputType === 'youtube' && (
-                                <form onSubmit={handleYoutubeSubmit} className="flex flex-col space-y-4">
-                                    <div className="text-center mb-4">
-                                        <h2 className="text-xl font-bold text-gray-800">Paste YouTube URL</h2>
-                                        <p className="text-sm text-gray-500 mt-2">We will download the audio, transcribe it, and provide a comprehensive summary and study guide.</p>
+                        {/* Hero Content */}
+                        <div className="z-10 flex flex-col items-center text-center px-4 max-w-4xl w-full animate-fade-in-up">
+                            <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-accent mb-6 tracking-tight drop-shadow-sm">
+                                Unlock Your Study Potential
+                            </h1>
+                            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl leading-relaxed">
+                                SocraticStudy is an AI-powered companion that turns textbooks and lectures into interactive summaries, audio, quizzes, and flashcards.
+                            </p>
+                        </div>
+
+                        {/* Interactive Upload Section */}
+                        <div className="z-10 w-full max-w-3xl flex flex-col items-center space-y-6 animate-fade-in-up px-4" style={{ animationDelay: '0.2s' }}>
+                            {/* Tab Switcher */}
+                            <div className="flex space-x-2 p-1.5 bg-white/60 backdrop-blur-md rounded-xl shadow-lg border border-white/50">
+                                <button
+                                    onClick={() => setInputType('pdf')}
+                                    className={`px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 ${inputType === 'pdf' ? 'bg-gradient-to-r from-brand-primary to-brand-secondary shadow-md text-white scale-105' : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'}`}
+                                >
+                                    PDF Document
+                                </button>
+                                <button
+                                    onClick={() => setInputType('youtube')}
+                                    className={`px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 ${inputType === 'youtube' ? 'bg-gradient-to-r from-red-500 to-rose-600 shadow-md text-white scale-105' : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'}`}
+                                >
+                                    YouTube Video
+                                </button>
+                                <button
+                                    onClick={() => setInputType('video')}
+                                    className={`px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 ${inputType === 'video' ? 'bg-gradient-to-r from-blue-500 to-cyan-600 shadow-md text-white scale-105' : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'}`}
+                                >
+                                    Local Media
+                                </button>
+                            </div>
+
+                            {/* Input Areas */}
+                            <div className="w-full bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 p-8 transform transition-all duration-500 ease-in-out hover:shadow-[0_20px_50px_rgba(99,_102,_241,_0.1)]">
+                                {inputType === 'pdf' && (
+                                    <div className="animate-fade-in-up">
+                                        <div className="text-center mb-6">
+                                            <h2 className="text-2xl font-bold text-gray-800">Summarize Your Textbooks</h2>
+                                            <p className="text-gray-500 mt-2">Upload a PDF to extract text, generate study guides, and chat with the document.</p>
+                                        </div>
+                                        <PdfUploader onFileChange={handleFileChange} />
                                     </div>
-                                    <input
-                                        type="url"
-                                        required
-                                        placeholder="https://www.youtube.com/watch?v=..."
-                                        value={youtubeUrlInput}
-                                        onChange={(e) => setYoutubeUrlInput(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg shadow transition-colors"
-                                    >
-                                        Process Video
-                                    </button>
-                                </form>
-                            )}
-                            {inputType === 'video' && (
-                                <div className="flex flex-col space-y-4 items-center">
-                                    <div className="text-center mb-4">
-                                        <h2 className="text-xl font-bold text-gray-800">Upload Media File</h2>
-                                        <p className="text-sm text-gray-500 mt-2">Upload a local video or audio file (.mp4, .mp3, .wav). We will transcribe and summarize it.</p>
+                                )}
+                                {inputType === 'youtube' && (
+                                    <form onSubmit={handleYoutubeSubmit} className="flex flex-col space-y-4 animate-fade-in-up">
+                                        <div className="text-center mb-4">
+                                            <h2 className="text-2xl font-bold text-gray-800">Learn from YouTube</h2>
+                                            <p className="text-gray-500 mt-2">Paste a URL. We'll download the audio, transcribe it, and build a study guide.</p>
+                                        </div>
+                                        <input
+                                            type="url"
+                                            required
+                                            placeholder="https://www.youtube.com/watch?v=..."
+                                            value={youtubeUrlInput}
+                                            onChange={(e) => setYoutubeUrlInput(e.target.value)}
+                                            className="w-full px-5 py-4 bg-white/50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all placeholder-gray-400 text-lg"
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="w-full bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1 text-lg"
+                                        >
+                                            Process Video
+                                        </button>
+                                    </form>
+                                )}
+                                {inputType === 'video' && (
+                                    <div className="flex flex-col space-y-4 items-center animate-fade-in-up">
+                                        <div className="text-center mb-4">
+                                            <h2 className="text-2xl font-bold text-gray-800">Analyze Local Media</h2>
+                                            <p className="text-gray-500 mt-2">Upload a local video or audio file (.mp4, .mp3, .wav) for transcription and summary.</p>
+                                        </div>
+                                        <label className="w-full flex flex-col items-center px-4 py-8 bg-blue-50/50 text-blue-600 rounded-xl tracking-wide uppercase border-2 border-blue-200 border-dashed cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all group">
+                                            <svg className="w-10 h-10 mb-3 text-blue-400 group-hover:text-blue-500 transition-colors" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                            </svg>
+                                            <span className="mt-2 text-lg font-semibold leading-normal">Select a media file</span>
+                                            <span className="text-xs text-blue-400 mt-1 normal-case">Audio or Video format</span>
+                                            <input type='file' className="hidden" accept="audio/*,video/*" onChange={handleVideoFileChange} />
+                                        </label>
                                     </div>
-                                    <label className="w-full flex flex-col items-center px-4 py-6 bg-blue-50 text-blue-500 rounded-lg tracking-wide uppercase border-2 border-blue-200 border-dashed cursor-pointer hover:bg-blue-100 hover:text-blue-600 transition-colors">
-                                        <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-                                        </svg>
-                                        <span className="mt-2 text-base leading-normal">Select a media file</span>
-                                        <input type='file' className="hidden" accept="audio/*,video/*" onChange={handleVideoFileChange} />
-                                    </label>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Footer Information Section */}
+                        <div className="z-10 mt-auto pt-24 pb-8 px-4 w-full max-w-6xl text-center">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                                <div className="bg-white/40 backdrop-blur-sm p-8 rounded-3xl border border-white/50 text-left hover:bg-white/60 transition-colors">
+                                    <div className="w-14 h-14 bg-indigo-100/80 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-800 mb-3">Deep Document Analysis</h3>
+                                    <p className="text-gray-600 leading-relaxed">Upload entire textbooks. Our AI uses massive context windows to understand every page, allowing for accurate Q&A without hallucination.</p>
                                 </div>
-                            )}
+                                <div className="bg-white/40 backdrop-blur-sm p-8 rounded-3xl border border-white/50 text-left hover:bg-white/60 transition-colors">
+                                    <div className="w-14 h-14 bg-rose-100/80 text-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-800 mb-3">Media Transcription</h3>
+                                    <p className="text-gray-600 leading-relaxed">Give us a YouTube URL or a lecture audio file. We'll transcribe it using advanced speech-to-text and generate a comprehensive study guide.</p>
+                                </div>
+                                <div className="bg-white/40 backdrop-blur-sm p-8 rounded-3xl border border-white/50 text-left hover:bg-white/60 transition-colors">
+                                    <div className="w-14 h-14 bg-emerald-100/80 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-800 mb-3">Active Recall Tools</h3>
+                                    <p className="text-gray-600 leading-relaxed">Don't just read passively. Turn your materials into dynamic Flashcards and multiple-choice Quizzes to test your knowledge.</p>
+                                </div>
+                            </div>
+                            <p className="text-gray-400 text-sm tracking-wide">Powered by Gemini 2.0 Flash • Fast, Hallucination-free, Secure Media Processing</p>
                         </div>
                     </div>
                 ) : (

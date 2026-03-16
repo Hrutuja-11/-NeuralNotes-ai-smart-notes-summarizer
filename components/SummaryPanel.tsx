@@ -5,6 +5,8 @@ import { PlayIcon } from './icons/PlayIcon';
 import { StopIcon } from './icons/StopIcon';
 import { Spinner } from './Spinner';
 import { ToggleSwitch } from './ToggleSwitch';
+import Flashcard from './Flashcard';
+import ReactMarkdown from 'react-markdown';
 
 interface SummaryPanelProps {
     summary: string;
@@ -15,11 +17,13 @@ interface SummaryPanelProps {
     error: string | null;
     onSummarize: () => void;
     onListen: () => void;
-    hasPdf: boolean;
+    hasDocument: boolean;
     hasSummaries: boolean;
     isEli5: boolean;
     setIsEli5: (value: boolean) => void;
     isPreparing: boolean;
+    summaryFormat: string;
+    setSummaryFormat: (format: 'paragraph' | 'bullets' | 'mindmap' | 'flashcards') => void;
 }
 
 const ShimmerEffect = () => (
@@ -39,18 +43,20 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({
     error,
     onSummarize,
     onListen,
-    hasPdf,
+    hasDocument,
     hasSummaries,
     isEli5,
     setIsEli5,
     isPreparing,
+    summaryFormat,
+    setSummaryFormat,
 }) => {
     return (
         <div className="flex flex-col">
             <div className="flex items-center space-x-4">
                 <button
                     onClick={onSummarize}
-                    disabled={isSummarizing || isPreparing || !hasPdf}
+                    disabled={isSummarizing || isPreparing || !hasDocument}
                     className="flex-1 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 disabled:bg-gray-300 disabled:text-gray-100 disabled:cursor-not-allowed transition-colors shadow"
                 >
                     {isPreparing ? <><Spinner /><span className="ml-2">Preparing...</span></> : 
@@ -79,7 +85,20 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({
 
             <div className="flex justify-between items-center mt-6 mb-4 border-b pb-2">
                  <h3 className="text-lg font-semibold text-gray-800">AI Summary</h3>
-                 <ToggleSwitch label="Explain Like I'm 5" checked={isEli5} onChange={setIsEli5} disabled={isSummarizing}/>
+                 <div className="flex items-center space-x-4">
+                     <select
+                         value={summaryFormat}
+                         onChange={(e) => setSummaryFormat(e.target.value as any)}
+                         disabled={isSummarizing}
+                         className="border-gray-300 rounded-md text-sm focus:ring-emerald-500 focus:border-emerald-500 p-1"
+                     >
+                         <option value="paragraph">Paragraph</option>
+                         <option value="bullets">Bullet Points</option>
+                         <option value="mindmap">Mind Map</option>
+                         <option value="flashcards">Flashcards</option>
+                     </select>
+                     <ToggleSwitch label="Explain Like I'm 5" checked={isEli5} onChange={setIsEli5} disabled={isSummarizing}/>
+                 </div>
             </div>
             
             <div className="flex-grow bg-brand-light/40 p-4 rounded-lg overflow-y-auto min-h-[150px]">
@@ -96,9 +115,15 @@ export const SummaryPanel: React.FC<SummaryPanelProps> = ({
                         <p className="mt-2">Generating summaries...</p>
                     </div>
                 ): summary ? (
-                    <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
-                        {summary.replace(/Here is a concise summary of the CURRENT PAGE text in 3-5 sentences:?\s*/i, '')}
-                    </p>
+                    typeof summary === 'string' ? (
+                        <div className="prose prose-sm max-w-none text-gray-800 leading-relaxed">
+                            <ReactMarkdown>
+                                {summary.replace(/Here is a concise summary of the CURRENT PAGE text in 3-5 sentences:?\s*/i, '')}
+                            </ReactMarkdown>
+                        </div>
+                    ) : summaryFormat === 'flashcards' && Array.isArray(summary) ? (
+                        <Flashcard cards={summary} />
+                    ) : null
                 ) : !hasSummaries ? (
                     <div className="text-center text-gray-500 pt-8">
                         <SparklesIcon className="h-12 w-12 mx-auto text-gray-300" />

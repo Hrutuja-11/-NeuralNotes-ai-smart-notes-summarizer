@@ -50,4 +50,43 @@ export async function doubt(question: string, context: string): Promise<string> 
   return data.answer as string;
 }
 
+export async function summarizeYoutube(url: string, isEli5: boolean = false): Promise<{ summary: string, transcript: string }> {
+  const res = await fetch(`${API_BASE_URL}/summarize-youtube`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url })
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return await res.json();
+}
 
+export async function summarizeVideo(file: File, isEli5: boolean = false): Promise<{ summary: string, transcript: string }> {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch(`${API_BASE_URL}/summarize-video-file`, {
+    method: 'POST',
+    body: form
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return await res.json();
+}
+
+export async function generateQuiz(text: string): Promise<any> {
+  const res = await fetch(`${API_BASE_URL}/generate-quiz`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return await res.json();
+}
+
+export async function generateFlashcards(text: string): Promise<any> {
+  const res = await fetch(`${API_BASE_URL}/generate-flashcards`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return await res.json();
+}

@@ -1,181 +1,127 @@
-# SocraticStudy  
-**[https://socratic-study-snowy.vercel.app/](https://socratic-study-snowy.vercel.app/)**  
+# SocraticStudy 📚
 
-An AI-powered web application for intelligent, interactive study sessions on PDFs.  
-SocraticStudy integrates document summarization, question answering, and text-to-speech (TTS) to create a seamless learning experience directly in the browser.  
+SocraticStudy is an intelligent, AI-powered study companion designed to help students master their course material. By uploading your PDF notes or textbooks, SocraticStudy processes the document to generate study summaries, explain complex concepts, synthesize text into audio, and answer custom doubts using advanced LLMs with massive context windows.
 
 ---
 
-## Overview
+## 🌟 Key Features
 
-SocraticStudy enables users to upload academic PDFs, receive **contextual summaries per page**, and **interactively query** the content using advanced large language models.  
-It also includes a **text-to-speech engine** for audio-based learning, **offline caching** for persistence, and a **fullscreen distraction-free study mode**.  
+1. **AI Document Summarization**
+   Extracts text from uploaded PDFs and generates clear, student-friendly summaries perfect for rapid revision. Supports a standard academic mode as well as an "Explain Like I'm 5" (ELI5) mode for simpler breakdowns.
+   
+2. **Interactive Doubt Solver**
+   A dedicated chat interface allows you to ask targeted questions about your study material. By leveraging the immense context window of modern LLMs, the **entire text** of your document is sent to the AI for highly accurate, hallucination-free reasoning based directly on your professor's notes.
+   
+3. **Text-To-Speech (TTS) Integration**
+   Converts generated text summaries into listenable MP3 audio streams on the fly, allowing you to review your study notes while commuting or multitasking.
 
-The system combines **React + TypeScript** on the frontend with a **FastAPI + LangChain** backend that securely handles AI model orchestration and TTS generation.
-
----
-
-## Features
-
-### PDF Upload and Viewing  
-- Supports standard PDF files using **Mozilla PDF.js**.  
-- Persistent page navigation and reading progress tracking.
-
-### Context-Aware Summarization  
-- Page-wise summaries with **cross-page context** (neighbor + global context).  
-- Two summarization modes:  
-  - *Standard* — concise academic-style summaries.  
-  - *ELI5* — simplified explanations.  
-- Summaries cached locally for instant reloads.
-
-### Interactive Q&A  
-- Users can query the document with natural language.  
-- Uses **LangChain** to construct dynamic prompts combining document embeddings and user questions.  
-- Employs **retrieval-augmented generation (RAG)** for contextually accurate answers.
-
-### Text-to-Speech (TTS)  
-- Converts AI summaries to natural speech.  
-- Built with the **Google Gemini SDK** for realistic voice generation.  
-- Supports continuous playback and fullscreen reading.
-
-### Fullscreen Study Mode  
-- Distraction-free interface with keyboard shortcuts:  
-  - `←` / `→` — Navigate between pages  
-  - `Space` — Play / Pause audio  
-  - `Esc` — Exit fullscreen  
-
-### Offline Caching  
-- Summaries, audio, and user progress are stored in `localStorage`.  
-- Ensures reliability even with intermittent connectivity.
+4. **Efficient AI Processing (Rate-Limit Safe)**
+   Re-engineered to send documents in optimized bulk requests. Instead of hitting strict Free Tier rate limits with page-by-page calls, SocraticStudy compiles the entire document and requests sweeping, comprehensive logic in a single shot—saving AI quotas and API costs while maintaining lightning-fast performance.
 
 ---
 
-## Tech Stack
+## 🏗 Architecture & Tech Stack
 
-| Layer | Technology |
-|-------|-------------|
-| Frontend | React 19, TypeScript, Vite |
-| Styling | Tailwind CSS, Inter Font |
-| PDF Rendering | Mozilla PDF.js |
-| AI & LLM Orchestration | LangChain + OpenRouter API |
-| TTS Engine | Google Gemini SDK |
-| Backend Framework | FastAPI (Python) |
-| Storage | Browser `localStorage` |
-| Deployment | Vercel (Frontend) + Render/Railway (Backend) |
+The application is built completely serverless and stateless for scalability, utilizing a decoupled Client/API architecture.
 
----
+### **Frontend**
+- **Framework:** React + Vite
+- **Language:** TypeScript
+- **Styling:** Custom CSS with CSS Variables & modern aesthetics (Glassmorphism, animations)
+- **PDF Handling:** `pdfjs-dist` (Extracts text natively in the browser before sending to the backend)
+- **Icons:** `lucide-react`
 
-## Architecture
-
-The system is divided into two core layers:
-
-1. **Frontend (React + TypeScript)**  
-   - Handles PDF viewing, summary display, TTS playback, and user interaction.  
-   - Communicates with the backend through RESTful endpoints.  
-   - Implements caching and offline storage.
-
-2. **Backend (FastAPI + LangChain)**  
-   - Acts as a secure proxy between frontend and LLM providers.  
-   - Manages summarization, TTS requests, and document Q&A pipelines.  
-   - Integrates LangChain components for:  
-     - PDF text chunking and vector embedding  
-     - Context retrieval  
-     - Query-based generation using LLMs  
-   - All API keys and credentials remain server-side.
+### **Backend**
+- **Framework:** FastAPI (Python)
+- **Language:** Python 3.x
+- **AI Integration:** OpenRouter API (`httpx` for async REST calls)
+- **Model Used:** `google/gemini-2.0-flash-001` (Via OpenRouter) - Chosen for its 1,000,000+ token context window, perfect for digesting full PDF textbooks without chunking/RAG limitations.
+- **Audio Processing:** `gTTS` (Google Text-to-Speech)
+- **Server:** `uvicorn` (ASGI Server)
 
 ---
 
-## Project Structure
+## 🚀 Getting Started
 
-```
-socratic-study/
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── services/
-│   │   ├── hooks/
-│   │   └── pages/
-│   └── vite.config.ts
-└── backend/
-    ├── main.py
-    ├── routes/
-    ├── utils/
-    └── .env
-```
+### Prerequisites
+- Node.js (v18+)
+- Python (v3.10+)
+- An API Key from [OpenRouter](https://openrouter.ai/)
 
----
+### Installation & Setup
 
-## Backend Setup (FastAPI + LangChain)
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/SocraticStudy.git
+   cd SocraticStudy
+   ```
 
-1. Create a virtual environment and install dependencies:
+2. **Backend Setup**
    ```bash
    cd backend
-   python -m venv .venv
-   source .venv/bin/activate  # Linux/Mac
-   .venv\Scripts\activate     # Windows
+   python -m venv venv
+   
+   # Activate virtual environment
+   # Windows:
+   .\venv\Scripts\activate
+   # Mac/Linux:
+   source venv/bin/activate
+   
    pip install -r requirements.txt
    ```
 
-2. Create an `.env` file:
+3. **Backend Configuration**
+   Create a `.env` file inside the `backend/` directory:
    ```env
-   OPENROUTER_API_KEY=your_openrouter_key
-   OPENROUTER_BASE=https://openrouter.ai/api/v1
+   OPENROUTER_API_KEY=your_openrouter_api_key_here
    FRONTEND_ORIGIN=http://localhost:3000
-   HTTP_REFERER=http://localhost:3000
-   X_TITLE=SocraticStudy
    ```
 
-3. Run the backend:
+4. **Frontend Setup**
+   Open a new terminal at the project root:
    ```bash
-   uvicorn backend.main:app --reload --port 8000
+   npm install
    ```
 
-4. Endpoints:
-   - `POST /upload_pdf` – Extracts and splits PDF text
-   - `POST /summarize` – Summarizes a given page
-   - `POST /tts` – Generates speech for summaries
-   - `POST /doubt` – Handles user queries using RAG
-
----
-
-## Deployment Guide
-
-### Frontend (Vercel)
-
-1. Push the repository to GitHub and import into Vercel.
-2. Configure build settings:
-   - Framework: **Vite**
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
-3. Optionally, add environment variables for public APIs if not using a backend.
-
-### Backend (Render / Railway / Fly.io)
-
-1. Set environment variables:
-   ```env
-   OPENROUTER_API_KEY=your_openrouter_key
-   FRONTEND_ORIGIN=https://socratic-study-snowy.vercel.app
-   HTTP_REFERER=https://socratic-study-snowy.vercel.app
-   X_TITLE=SocraticStudy
-   ```
-
-2. Expose port 8000 and start the server:
+5. **Run the Application Locally**
+   
+   Start the Backend Server:
    ```bash
-   uvicorn backend.main:app --host 0.0.0.0 --port 8000
+   cd backend
+   uvicorn main:app --reload --port 8000
+   ```
+   
+   Start the Frontend Dev Server:
+   ```bash
+   npm run dev
    ```
 
-3. Update frontend API base URL to your deployed backend endpoint.
+   The application will be accessible at `http://localhost:3000`.
 
 ---
 
-## Security Model
+## 📂 File Structure
 
-- API keys are securely stored on the backend only.
-- CORS and referer validation are enforced via environment configuration.
-- Frontend communicates exclusively with the backend proxy to prevent key exposure.
+```text
+SocraticStudy/
+├── backend/                  # FastAPI Application
+│   ├── main.py               # Core API logic, OpenRouter endpoints & TTS routes
+│   ├── requirements.txt      # Python dependencies
+│   ├── .env                  # Environment Variables 
+│   ├── uploads/              # Transient PDF dump directory
+│   └── media/                # Cached TTS .mp3 audio assets
+├── src/                      # React Frontend Source Code
+│   ├── components/           # Reusable UI components
+│   ├── services/             # API client services
+│   │   ├── backendClient.ts  # Fetches answers & summaries from FastAPI
+│   │   └── langchainService.ts # Local PDF context orchestrator
+│   ├── App.tsx               # Main frontend interface logic
+│   ├── index.css             # Global dark-mode aesthetic styling
+│   └── main.tsx              # React DOM entry point
+├── package.json              # NPM scripts and dependencies
+├── tsconfig.json             # TypeScript configuration
+└── README.md                 # Project Documentation
+```
 
----
-
-## License
-
-This project is open-source under the MIT License.
+## 📝 License
+This project is licensed under the MIT License.

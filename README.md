@@ -1,4 +1,4 @@
-# SocraticStudy 📚🧠
+# NuralNots  📚🧠
 
 **SocraticStudy** is an intelligent, AI-powered study companion designed to help students, researchers, and lifelong learners master their course material faster. By leveraging advanced LLMs with massive context windows, SocraticStudy can ingest full textbooks, YouTube videos, and lectures to generate study summaries, explain complex concepts, synthesize audio, create quizzes, and answer custom doubts.
 

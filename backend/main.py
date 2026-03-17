@@ -1,7 +1,10 @@
 import os
 import hashlib
 import uuid
+import pdfplumber
 from typing import List, Optional, Dict, Any
+
+
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,26 +25,25 @@ load_dotenv()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000")
 
-def _ensure_dirs():
-    os.makedirs("backend/uploads", exist_ok=True)
-    os.makedirs("backend/media", exist_ok=True)
-
 app = FastAPI(title="SocraticStudy Backend", version="1.1.0")
+
+def _ensure_dirs():
+    os.makedirs("uploads", exist_ok=True)
+    os.makedirs("media", exist_ok=True)
+
+app.mount("/media", StaticFiles(directory="media"), name="media")
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://socraticstudy.vercel.app",
-        "http://localhost:3000",
-        "*"
-    ],
-    allow_credentials=False,
+    allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 _ensure_dirs()
-app.mount("/media", StaticFiles(directory="backend/media"), name="media")
+
 
 OPENROUTER_BASE = "https://openrouter.ai/api/v1"
 
@@ -84,17 +86,14 @@ def _hash_key(prefix: str, *parts: str) -> str:
 async def upload_pdf(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
-    path = os.path.join("backend/uploads", f"{uuid.uuid4()}_{file.filename}")
+
+    path = os.path.join("uploads", f"{uuid.uuid4()}_{file.filename}")
+
     try:
         with open(path, "wb") as f:
             f.write(await file.read())
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save upload: {e}")
-
-    try:
-        import pdfplumber
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"pdfplumber not installed: {e}")
 
     pages_text: List[str] = []
     meta: Dict[str, Any] = {}
@@ -275,7 +274,7 @@ async def tts(req: TTSRequest):
     if not req.summary.strip():
         raise HTTPException(status_code=400, detail="Summary is empty")
     filename = f"tts_{uuid.uuid4()}.mp3"
-    filepath = os.path.join("backend/media", filename)
+    filepath = os.path.join("media", filename)
     try:
         tts = gTTS(text=req.summary)
         tts.save(filepath)
@@ -364,4 +363,4 @@ async def root():
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    return {"status": "ok"}

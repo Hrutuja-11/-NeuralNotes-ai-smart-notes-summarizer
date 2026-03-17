@@ -6,10 +6,10 @@
 const explicit = (import.meta as any)?.env?.VITE_API_URL || (globalThis as any)?.process?.env?.VITE_API_URL;
 const isLocal = typeof window !== 'undefined' && /^(localhost|127\.|0:0:0:0:0:0:0:1|\[::1\])$/.test(window.location.hostname);
 const DEFAULT_LOCAL = 'http://localhost:8000';
-const DEFAULT_PROD = 'https://socraticstudy.onrender.com';
+const DEFAULT_PROD = 'https://neuralnotes-backend.onrender.com';
 export const API_BASE_URL: string = (explicit as string) || (isLocal ? DEFAULT_LOCAL : DEFAULT_PROD);
 
-export async function uploadPdf(file: File): Promise<{ num_pages: number; pages: string[]; metadata: any; }>{
+export async function uploadPdf(file: File): Promise<{ num_pages: number; pages: string[]; metadata: any; }> {
   const form = new FormData();
   form.append('file', file);
   const res = await fetch(`${API_BASE_URL}/upload_pdf`, { method: 'POST', body: form });
